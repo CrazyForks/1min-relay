@@ -1,189 +1,88 @@
 # 1min-Relay
-Relay 1min AI API to OpenAI Structure in 1 minute.
 
-Don't forget to star this repository if you like it! 
+## Overview
+1min-Relay relays the 1min AI API to an OpenAI-compatible structure in under one minute. This project supports fast, reliable integration with various clients, features for managing conversation history and models, and optional hosted or self-hosted deployments. For details and updates, visit the hosted version and community channels below.
 
-Details about 1minrelay and it's hosted version is here:
-https://www.kokodev.cc/1minrelay
-
-Oh and by the way, join our discord server for support and updates!
-[https://discord.gg/GQd3DrxXyj](https://discord.gg/GQd3DrxXyj)
-
-Please support us by donating at https://donate.stripe.com/00w4gB1NbdI60afcKPgMw00 or purchasing the paid version (hosted) at https://shop.kokodev.cc/products AND, by purchasing the paid version, you get many perks too! Check below for perks!
+## Key links
+- Hosted version: https://www.kokodev.cc/1minrelay
+- Discord for support and updates: https://discord.gg/GQd3DrxXyj
+- Donation: https://donate.stripe.com/00w4gB1NbdI60afcKPgMw00
+- Paid hosted version and perks: https://shop.kokodev.cc/products
+- GitHub repository: https://github.com/kokofixcomputers/1min-relay
 
 ## Features
-- **bolt.diy Support**: Compatible with bolt.diy for seamless integration.
-- **Conversation History**: Retain and manage conversation history effortlessly.
-- **Broad Client Compatibility**: Works with most clients supporting OpenAI Custom Endpoint.
-- **Fast and Reliable Relay**: Relays 1min AI API to OpenAI-compatible structure within 1 minute.
-- **User-Friendly**: Easy to set up and quick to use.
-- **Model Exposure Control**: Expose all or a predefined subset of 1min.ai-supported models.
-- **Streaming Support**: Enables real-time streaming for faster interactions.
-- **Non-Streaming Support**: Compatible with non-streaming workflows.
-- **Docker Support**: Deploy easily with Docker for fast and consistent setup.
-- **Multi-Document Support**: Supports document uploads for enhanced functionality. Some include .docx, .pdf, .txt, .yaml and etc.
-- **Image Support**: Supports image uploads for enhanced functionality.
-- **ARM64 and AMD64 Support**: Compatible with both ARM64 and AMD64 architectures.
-- **Multiple Requests**: Supports multiple requests simultaneously.
+- bolt.diy compatibility: Seamless integration with bolt.diy
+- Conversation history: Preserve and manage conversations
+- Broad client compatibility: Works with most clients that support an OpenAI Custom Endpoint
+- Fast and reliable relay: Relays 1min AI API to an OpenAI-compatible structure quickly
+- User-friendly: Easy to install and use
+- Model exposure control: Expose all models or a predefined subset
+- Streaming support: Real-time streaming for faster interactions
+- Non-streaming support: Compatible with non-streaming workflows
+- Docker support: Simple deployment with Docker
+- Multi-document support: Upload and process documents (e.g., .docx, .pdf, .txt, .yaml, etc.)
+- Image support: Upload and process images
+- Architecture compatibility: ARM64 and AMD64 support
+- Concurrent requests: Handles multiple requests simultaneously
 
-## Paid Perks
-- **Hosted**: Hosted for you, accessible anytime, anywhere.
-- **Latest Features**: Get access to latest features such as image generations that are not yet available in the public version.
-- **Priority Bug Fix**: Get the most common bug fixed quickly
-- **Priority Support**: Get support quicker than public version!
+## Paid perks (optional)
+- Hosted service: Access anytime, anywhere
+- Latest features: Early access to features not yet in the public version (e.g., image generation)
+- Priority bug fixes: Faster resolution of common issues
+- Priority support: Faster assistance compared to the public version
 
+## Installation
 
-## Installation:
+### Bare-metal (local machine)
+- Prerequisites: Python 3.x, pip, Git
+- Clone the repository:
+  - git clone https://github.com/kokofixcomputers/1min-relay.git
+- Install dependencies:
+  - pip install -r requirements.txt
+- Run:
+  - python3 main.py
+  Note: On some systems, you may need to use python instead of python3.
 
-Clone the git repo into your machine with:
-```bash
-git clone https://github.com/kokofixcomputers/1min-relay.git
-```
+### Docker (recommended for ease of deployment)
 
-### Bare-metal
+Pre-built images
+- Pull the image:
+  - docker pull kokofixcomputers/1min-relay:latest
+- Create a dedicated network (recommended for memcached communication):
+  - docker network create 1min-relay-network
+- Start Memcached:
+  - docker run -d --name memcached --network 1min-relay-network memcached
+- Run the 1min-relay container:
+  - docker run -d --name 1min-relay-container --network 1min-relay-network -p 5001:5001 \
+    -e SUBSET_OF_ONE_MIN_PERMITTED_MODELS="mistral-nemo,gpt-4o-mini,deepseek-chat" \
+    -e PERMIT_MODELS_FROM_SUBSET_ONLY=True \
+    kokofixcomputers/1min-relay:latest
 
-To install dependencies, run:
-```bash
-pip install -r requirements.txt
-```
+Environment variables
+- SUBSET_OF_ONE_MIN_PERMITTED_MODELS: Subset of 1min.ai models to expose. Default: mistral-nemo,gpt-4o,deepseek-chat.
+- PERMIT_MODELS_FROM_SUBSET_ONLY: Restrict model usage to the specified subset. Set to True to enforce, False to allow all models supported by 1min.ai. Default: True.
 
-and then run python3 main.py
+Self-build (Docker image from source)
+1) Build the Docker image:
+   - docker build -t 1min-relay:latest .
+2) Create a dedicated network:
+   - docker network create 1min-relay-network
+3) Run Memcached:
+   - docker run -d --name memcached --network 1min-relay-network memcached
+4) Run the 1min-relay container:
+   - docker run -d --name 1min-relay-container --network 1min-relay-network -p 5001:5001 \
+     -e SUBSET_OF_ONE_MIN_PERMITTED_MODELS="mistral-nemo,gpt-4o-mini,deepseek-chat" \
+     -e PERMIT_MODELS_FROM_SUBSET_ONLY=True \
+     1min-relay:latest
 
-Depending on your system, you may need to run `python` instead of `python3`.
+Notes
+- The container port 5001 is exposed to the host for API access.
+- When using Docker Compose, you can simplify networking and service orchestration (see repository for a provided compose file).
 
-### Docker
-Running 1min-relay in docker is the easiet method. Please note that the connection ip address displayed on server start will be wrong when in docker.
+Verification
+- Check container logs:
+  - docker logs -f 1min-relay-container
+- Test the API endpoint (example):
+  - curl -X GET http://localhost:5001/v1/models
 
-#### Pre-Built images
-
-1. Pull the Docker Image:
-```bash
-docker pull kokofixcomputers/1min-relay:latest
-```
-
-2. To encrease security, 1min-relay will require it's own network to be able to communicate with memcached.
-To create a network, run:
-```bash
-docker network create 1min-relay-network
-```
-
-3. Run Memcached.
-```bash
-docker run -d --name memcached --network 1min-relay-network memcached
-```
-
-4. Run the 1min-relay Container:
-```bash
-docker run -d --name 1min-relay-container --network 1min-relay-network -p 5001:5001 \
-  -e SUBSET_OF_ONE_MIN_PERMITTED_MODELS="mistral-nemo,gpt-4o-mini,deepseek-chat" \
-  -e PERMIT_MODELS_FROM_SUBSET_ONLY=True \
-  kokofixcomputers/1min-relay:latest
-```
-Environment Variables:
-
-- `SUBSET_OF_ONE_MIN_PERMITTED_MODELS`: Specifies a subset of 1min.ai models to expose. Default: mistral-nemo,gpt-4o,deepseek-chat.
-- `PERMIT_MODELS_FROM_SUBSET_ONLY`: Restricts model usage to the specified subset. Set to True to enforce this restriction or False to allow all models supported by 1min.ai. Default: True.
-
-
-#### Self-Build
-
-1. Build the Docker Image
-From the project directory (where Dockerfile and main.py reside), run:
-
-```bash
-docker build -t 1min-relay:latest .
-```
-
-2. To encrease security, 1min-relay will require it's own network to be able to communicate with memcached.
-To create a network, run:
-```bash
-docker network create 1min-relay-network
-```
-
-3. Run Memcached.
-```bash
-docker run -d --name memcached --network 1min-relay-network memcached
-```
-
-4. Run the 1min-relay Container:
-```bash
-docker run -d --name 1min-relay-container --network 1min-relay-network -p 5001:5001 \
-  -e SUBSET_OF_ONE_MIN_PERMITTED_MODELS="mistral-nemo,gpt-4o-mini,deepseek-chat" \
-  -e PERMIT_MODELS_FROM_SUBSET_ONLY=True \
-  1min-relay:latest
-```
-
-- `-d` runs the container in detached (background) mode.
-- `-p 5001:5001` maps your host’s port 5001 to the container’s port 5001.
-- `--name 1min-relay-container` is optional, but it makes it easier to stop or remove the container later.
-- `-e`: Specifies environment variables.
-- `SUBSET_OF_ONE_MIN_PERMITTED_MODELS`: Specifies a subset of 1min.ai models to expose. Default: mistral-nemo,gpt-4o,deepseek-chat.
-- `PERMIT_MODELS_FROM_SUBSET_ONLY`: Restricts model usage to the specified subset. Set to True to enforce this restriction or False to allow all models supported by 1min.ai. Default: False.
-
-
-4. Verify It’s Running
-Check logs (optional):
-
-```bash
-docker logs -f 1min-relay-container
-```
-You should see your Flask server output: “Server is ready to serve at …”
-
-Test from your host machine:
-
-```bash
-curl -X GET http://localhost:5001/v1/models
-```
-
-5. Stopping or Removing the Container
-To stop the container:
-
-```bash
-docker stop 1min-relay-container
-```
-
-To remove the container:
-
-```bash
-docker rm 1min-relay-container
-```
-
-To remove the image entirely:
-
-```bash
-docker rmi 1min-relay:latest
-```
-
-Optional: Run with Docker Compose
-If you prefer Docker Compose, you can run the docker compose included with the repo:
-
-Just run:
-
-```bash
-docker compose up -d
-```
-Compose will automatically do these things for you:
-- Create a network
-- Run Memcached
-- Run the 1min-relay Container
-
-#### Managing docker containers
-You can also have multiple instances of 1min-relay running on the same machine with docker.
-
-You just need to chznge the name parameter of the container so you can identify them.
-
-To stop a 1min-relay container, run:
-```bash
-docker stop 1min-relay-container
-```
-To start it again, run:
-```bash
-docker start 1min-relay-container
-```
-
-### Environment Variables
-- `SUBSET_OF_ONE_MIN_PERMITTED_MODELS`: Specifies a subset of 1min.ai models to expose. Default: mistral-nemo,gpt-4o,deepseek-chat.
-- `PERMIT_MODELS_FROM_SUBSET_ONLY`: Restricts model usage to the specified subset. Set to True to enforce this restriction or False to allow all models supported by 1min.ai. Default: False.
-
-### Support
-Please consider supporting us by donating at https://donate.stripe.com/00w4gB1NbdI60afcKPgMw00 or contributing.
+### If you find this project useful, please consider starring the repository and supporting us through the provided donation or paid hosted options.
