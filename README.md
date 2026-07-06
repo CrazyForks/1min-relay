@@ -4,7 +4,7 @@
 1min-Relay relays the 1min AI API to an OpenAI-compatible structure in under one minute. This project supports fast, reliable integration with various clients, features for managing conversation history and models, and optional hosted or self-hosted deployments. For details and updates, visit the hosted version and community channels below.
 
 ## Key links
-- Hosted version: https://www.kokodev.cc/1minrelay
+- Hosted version: https://1minrelay.kokodev.cc
 - Discord for support and updates: https://discord.gg/GQd3DrxXyj
 - Donation: https://donate.stripe.com/00w4gB1NbdI60afcKPgMw00
 - Paid hosted version and perks: https://shop.kokodev.cc/products
