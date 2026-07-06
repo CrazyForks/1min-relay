@@ -485,4 +485,4 @@ OpenAI-compatible endpoint:
 {printedcolors.Color.reset}"""
     )
 
-    serve(app, host=HOST, port=int(os.getenv("THREADS", "6")))
+    serve(app, host=HOST, port=PORT, threads=int(os.getenv("THREADS", "6")))
